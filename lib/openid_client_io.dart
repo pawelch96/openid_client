@@ -1,8 +1,9 @@
 library openid_client.io;
 
-import 'openid_client.dart';
 import 'dart:async';
 import 'dart:io';
+
+import 'openid_client.dart';
 
 export 'openid_client.dart';
 
@@ -27,6 +28,15 @@ class Authenticator {
       : flow = redirectUri == null
             ? Flow.authorizationCodeWithPKCE(client)
             : Flow.authorizationCode(client)
+          ..scopes.addAll(scopes)
+          ..redirectUri = redirectUri ?? Uri.parse('http://localhost:$port/');
+
+  Authenticator.withPKCE(Client client,
+      {this.port = 3000,
+      this.urlLancher = _runBrowser,
+      Iterable<String> scopes = const [],
+      Uri? redirectUri})
+      : flow = Flow.authorizationCodeWithPKCE(client)
           ..scopes.addAll(scopes)
           ..redirectUri = redirectUri ?? Uri.parse('http://localhost:$port/');
 
